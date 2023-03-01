@@ -1,0 +1,127 @@
+title: DNS Automation using functions
+description: Sample deployment enabeling automation of OCI DNS Zone records management using Functions.
+informationalText: Automation of OCI DNS Zone records management using Functions.
+schemaVersion: 1.1.0
+version: "20190304"
+
+locale: "en"
+variableGroups:
+  - title: "Hidden variables"
+    visible: false
+    variables:
+      - tenancy_ocid
+      - compartment_ocid
+      - region
+      - user_ocid
+      - fingerprint
+      - private_key_path
+      - default_freeform_tags
+      - default_defined_tags
+      - release
+      - stream_ids
+      - topic_ids
+      - apm_domain_ids
+      - kms_key_ids
+      - nsg_ids
+  - title: "DNS Automation setup"
+    visible: true
+    variables:
+      - deployment_compartment
+      - monitored_compartment
+      - ${vcnCompartment}
+      - application_vcn
+      - subnetCompartment
+      - application_subnet
+      - dns_zone_ocid
+      - oci_username
+      - oci_auth_token
+      - create_functions_policies
+     
+     
+variables:
+  deployment_compartment:
+    type: oci:identity:compartment:id
+    title: "Compartment where to place the functions."
+    description: "Two functions, dns_add_record and dns_remove_record, are used to manage DNS zone records."
+    required: true
+
+  monitored_compartment:
+    type: oci:identity:compartment:id
+    title: "What parent compartment should be used to capture instance events?"
+    descripton: "Functions get triggered on events emitted when an instance is created or terminated."
+    required: true
+
+  vcnCompartment:
+    title: Select VCN compartment.
+    type: oci:identity:compartment:id
+    required: true
+ 
+  application_vcn:
+    title: VCN to use with the functions.
+    required: true
+    type: oci:core:vcn:id
+    dependsOn:
+      compartmentId: ${vcnCompartment}
+ 
+  subnetCompartment:
+    title: Select subnet compartment.
+    type: oci:identity:compartment:id
+    required: true
+ 
+  application_subnet:
+    title: Subnet to use with the functions.
+    description: Subnet should allow connectivity to OCI API (via service gateway or NAT gateway).
+    type: oci:core:subnet:id
+    required: true
+    dependsOn:
+      compartmentId: ${subnetCompartment}
+      vcnId: ${application_vcn}
+
+  dns_zone_ocid:
+    type: string
+    title: "OCID of the DNS Zone."
+    description: "DNS Zone where records will be added and removed automatically by OCI functions."
+    required: true
+
+  oci_username:
+    type: string
+    title: "OCI Username (required for the functions deployment)"
+    description: "For a federated user (single sign-on with an identity provider), enter the username in the following format: Federation/UserName. For example, if you use OCI's identity provider, your login would be, oracleidentitycloudservice/alice.jones@acme.com. If you are using OCI's direct sign-in, enter the username in the following format: YourUserName. For example, alice_jones."
+    required: true
+
+  oci_auth_token:
+    type: string
+    title: "OCI auth-token (required for the functions deployment)"
+    description: "You can get the auth token from your Profile menu -> click User Settings -> On left side  click *Auth Tokens -> Generate Token"
+    required: true
+
+  create_functions_policies:
+    type: boolean
+    title: "Create required policies for functions to interact with OCI API?"
+    required: true
+    default: true
+
+outputGroups:
+- title: "LSF Master Node"
+  outputs:
+    - LSF_Master_hostname
+    - LSF_Master_private_ip
+    - LSF_Master_public_ip
+
+- title: "Access details"
+  outputs:
+    - private_key_bastion
+    - LSF_bastion_connection
+
+outputs:
+  application_ids:
+    type: map
+    title: Map of application names and OCIDs
+
+  function_ids:
+    type: map
+    title: Map of function names and OCIDs
+  
+  container_repositories:
+    type: map
+    title: Map of container image repository names and URLs
