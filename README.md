@@ -26,7 +26,7 @@ Navigate to User Profile in OCI Console and create a new [auth token](https://do
 
 Click below button, fill-in required values and `Apply`.
 
-[![Deploy to OCI](https://docs.oracle.com/en-us/iaas/Content/Resources/Images/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/robo-cap/oci-arch-custom-dns-fn/archive/refs/tags/v1.0.zip)
+[![Deploy to OCI](https://docs.oracle.com/en-us/iaas/Content/Resources/Images/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-devrel/oci-arch-custom-dns-fn/archive/refs/tags/v1.0.zip)
 
 
 ## Manual deployment
